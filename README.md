@@ -21,7 +21,7 @@ Terraform module which creates
 | min\_size | minimum number of worker nodes | `number` | `1` | no |
 | name | Name of the cluster | `string` | `"my-cluster"` | no |
 | public\_access\_cidrs | List of CIDR blocks that can access the Amazon EKS public API server endpoint when enabled | `list(string)` | `[]` | no |
-| retention\_in\_days | Specifies the number of days you want to retain log events in the specified log group | `number` | n/a | yes |
+| retention\_in\_days | Specifies the number of days you want to retain log events in the specified log group | `number` | `0` | no |
 | subnet\_ids | List of subnet IDs. | `list(string)` | `[]` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | vpc\_id | The VPC ID | `string` | `""` | no |
