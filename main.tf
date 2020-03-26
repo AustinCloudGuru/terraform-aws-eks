@@ -125,8 +125,9 @@ resource "aws_eks_cluster" "this" {
     endpoint_private_access = var.endpoint_private_access
     endpoint_public_access  = var.endpoint_public_access
     public_access_cidrs     = var.public_access_cidrs
-
   }
+  enabled_cluster_log_types = [var.enabled_cluster_log_types]
+
   tags = merge(
     {
       "Name" = join("-", [var.name, "node"])
@@ -138,6 +139,19 @@ resource "aws_eks_cluster" "this" {
     aws_iam_role_policy_attachment.cluster-AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.cluster-AmazonEKSServicePolicy,
   ]
+}
+
+resource "aws_cloudwatch_log_group" "this" {
+  count             = var.retention_in_days ? 1 : 0
+  name              = "/aws/eks/${var.name}/cluster"
+  retention_in_days = var.retention_in_days
+  tags = merge(
+    {
+      "Name" = join("-", [var.name, "node"])
+    },
+    var.tags
+  )
+
 }
 
 #------------------------------------------------------------------------------

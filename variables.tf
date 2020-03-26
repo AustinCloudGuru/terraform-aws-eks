@@ -66,3 +66,15 @@ variable "public_access_cidrs" {
   type        = list(string)
   default     = []
 }
+
+variable "enabled_cluster_log_types" {
+  description = "A list of the desired control plane logging to enable"
+  type        = list(string)
+  default     = ["api"]
+}
+
+variable "retention_in_days" {
+  description = "Specifies the number of days you want to retain log events in the specified log group"
+  type        = number
+  default     = null
+}
