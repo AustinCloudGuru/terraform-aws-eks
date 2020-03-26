@@ -24,3 +24,27 @@ variable "cidr_blocks" {
   type = list(string)
   default = []
 }
+
+variable "subnet_ids" {
+  description = "List of subnet IDs."
+  type = list(string)
+  default = []
+}
+
+variable "desired_size" {
+  description = "Desired number of worker nodes"
+  type = number
+  default = 1
+}
+
+variable "max_size" {
+  description = "Maximum number of worker nodes"
+  type = number
+  default = 1
+}
+
+variable "min_size" {
+  description = "minimum number of worker nodes"
+  type = number
+  default = 1
+}

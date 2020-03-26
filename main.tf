@@ -1,29 +1,29 @@
 #------------------------------------------------------------------------------
-# Create the EKS Cluster IAM Roles
+# EKS Cluster IAM Role
 #------------------------------------------------------------------------------
-resource "aws_iam_role" "this" {
-  name               = var.name
+resource "aws_iam_role" "cluster" {
+  name = join("-", [var.name, "cluster"])
   path               = "/"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.cluster.json
   tags = merge(
   {
-    "Name" = var.name
+    "Name" = join("-", [var.name, "cluster"])
   },
   var.tags
   )
 }
 
-resource "aws_iam_role_policy_attachment" "this-AmazonEKSClusterPolicy" {
+resource "aws_iam_role_policy_attachment" "cluster-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam:aws:policy/AmazonEKSClusterPolicy"
-  role = aws_iam_role.this.id
+  role = aws_iam_role.cluster.id
 }
 
-resource "aws_iam_role_policy_attachment" "this-AmazonEKSServicePolicy" {
+resource "aws_iam_role_policy_attachment" "cluster-AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam:aws:policy/AmazonEKSServicePolicy"
-  role = aws_iam_role.this.id
+  role = aws_iam_role.cluster.id
 }
 
-data "aws_iam_policy_document" "assume_role" {
+data "aws_iam_policy_document" "cluster" {
   statement {
     actions = ["sts:AssumeRole"]
     principals {
@@ -36,7 +36,50 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 #------------------------------------------------------------------------------
-# Create the EKS Cluster Security Group
+# EKS Node IAM Role
+#------------------------------------------------------------------------------
+resource "aws_iam_role" "node" {
+  name = join("-", [var.name, "node"])
+  path = "/"
+  assume_role_policy = data.aws_iam_policy_document.node.json
+  tags = merge(
+  {
+    "Name" = join("-", [var.name, "node"])
+  },
+  var.tags
+  )
+}
+
+resource "aws_iam_role_policy_attachment" "node-AmazonEKSWorkerNodePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.node.name
+}
+
+resource "aws_iam_role_policy_attachment" "node-AmazonEKS_CNI_Policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.node.name
+}
+
+resource "aws_iam_role_policy_attachment" "node-AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.node.name
+}
+
+
+data "aws_iam_policy_document" "node" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type = "Service"
+      identifiers = [
+        "ec2.amazonaws.com"
+      ]
+    }
+  }
+}
+
+#------------------------------------------------------------------------------
+# EKS Cluster Security Group
 #------------------------------------------------------------------------------
 resource "aws_security_group" "this" {
   name        = var.name
@@ -70,18 +113,40 @@ resource "aws_security_group_rule" "https" {
 #------------------------------------------------------------------------------
 # EKS Cluster
 #------------------------------------------------------------------------------
-resource "aws_eks_cluster" "demo" {
+resource "aws_eks_cluster" "this" {
   name     = var.name
-  role_arn = aws_iam_role.this.arn
+  role_arn = aws_iam_role.cluster.arn
 
   vpc_config {
     security_group_ids = [aws_security_group.this.id]
-    subnet_ids         = var.subnets
+    subnet_ids         = var.subnet_ids
   }
 
   depends_on = [
-    aws_iam_role_policy_attachment.this-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.this-AmazonEKSServicePolicy,
+    aws_iam_role_policy_attachment.cluster-AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.cluster-AmazonEKSServicePolicy,
+  ]
+}
+
+#------------------------------------------------------------------------------
+# EKS Node Group
+#------------------------------------------------------------------------------
+resource "aws_eks_node_group" "demo" {
+  cluster_name    = aws_eks_cluster.this.name
+  node_group_name = join("-", [var.name, "-ng"])
+  node_role_arn   = aws_iam_role.node.arn
+  subnet_ids      = var.subnet_ids
+
+  scaling_config {
+    desired_size = var.desired_size
+    max_size     = var.max_size
+    min_size     = var.min_size
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.node-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
   ]
 }
 
