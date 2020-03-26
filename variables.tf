@@ -61,7 +61,7 @@ variable "endpoint_private_access" {
   default     = false
 }
 
-variable "public_cidr_access" {
+variable "public_access_cidrs" {
   description = "List of CIDR blocks that can access the Amazon EKS public API server endpoint when enabled"
   type        = list(string)
   default     = []

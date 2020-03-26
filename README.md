@@ -19,7 +19,7 @@ Terraform module which creates
 | max\_size | Maximum number of worker nodes | `number` | `1` | no |
 | min\_size | minimum number of worker nodes | `number` | `1` | no |
 | name | Name of the cluster | `string` | `"my-cluster"` | no |
-| public\_cidr\_access | List of CIDR blocks that can access the Amazon EKS public API server endpoint when enabled | `list(string)` | `[]` | no |
+| public\_access\_cidrs | List of CIDR blocks that can access the Amazon EKS public API server endpoint when enabled | `list(string)` | `[]` | no |
 | subnet\_ids | List of subnet IDs. | `list(string)` | `[]` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | vpc\_id | The VPC ID | `string` | `""` | no |
