@@ -138,11 +138,11 @@ resource "aws_eks_cluster" "this" {
   depends_on = [
     aws_iam_role_policy_attachment.cluster-AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.cluster-AmazonEKSServicePolicy,
+    aws_cloudwatch_log_group.this
   ]
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  count             = var.retention_in_days ? 1 : 0
   name              = "/aws/eks/${var.name}/cluster"
   retention_in_days = var.retention_in_days
   tags = merge(
