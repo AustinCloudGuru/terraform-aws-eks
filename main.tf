@@ -2,25 +2,25 @@
 # EKS Cluster IAM Role
 #------------------------------------------------------------------------------
 resource "aws_iam_role" "cluster" {
-  name = join("-", [var.name, "cluster"])
+  name               = join("-", [var.name, "cluster"])
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.cluster.json
   tags = merge(
-  {
-    "Name" = join("-", [var.name, "cluster"])
-  },
-  var.tags
+    {
+      "Name" = join("-", [var.name, "cluster"])
+    },
+    var.tags
   )
 }
 
 resource "aws_iam_role_policy_attachment" "cluster-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam:aws:policy/AmazonEKSClusterPolicy"
-  role = aws_iam_role.cluster.id
+  role       = aws_iam_role.cluster.id
 }
 
 resource "aws_iam_role_policy_attachment" "cluster-AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam:aws:policy/AmazonEKSServicePolicy"
-  role = aws_iam_role.cluster.id
+  role       = aws_iam_role.cluster.id
 }
 
 data "aws_iam_policy_document" "cluster" {
@@ -39,14 +39,14 @@ data "aws_iam_policy_document" "cluster" {
 # EKS Node IAM Role
 #------------------------------------------------------------------------------
 resource "aws_iam_role" "node" {
-  name = join("-", [var.name, "node"])
-  path = "/"
+  name               = join("-", [var.name, "node"])
+  path               = "/"
   assume_role_policy = data.aws_iam_policy_document.node.json
   tags = merge(
-  {
-    "Name" = join("-", [var.name, "node"])
-  },
-  var.tags
+    {
+      "Name" = join("-", [var.name, "node"])
+    },
+    var.tags
   )
 }
 
@@ -93,10 +93,10 @@ resource "aws_security_group" "this" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = merge(
-  {
-    "Name" = var.name
-  },
-  var.tags
+    {
+      "Name" = var.name
+    },
+    var.tags
   )
 }
 
@@ -149,4 +149,3 @@ resource "aws_eks_node_group" "demo" {
     aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
   ]
 }
-
