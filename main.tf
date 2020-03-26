@@ -121,6 +121,12 @@ resource "aws_eks_cluster" "this" {
     security_group_ids = [aws_security_group.this.id]
     subnet_ids         = var.subnet_ids
   }
+  tags = merge(
+    {
+      "Name" = join("-", [var.name, "node"])
+    },
+    var.tags
+  )
 
   depends_on = [
     aws_iam_role_policy_attachment.cluster-AmazonEKSClusterPolicy,
@@ -142,6 +148,12 @@ resource "aws_eks_node_group" "demo" {
     max_size     = var.max_size
     min_size     = var.min_size
   }
+  tags = merge(
+    {
+      "Name" = join("-", [var.name, "node"])
+    },
+    var.tags
+  )
 
   depends_on = [
     aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy,
