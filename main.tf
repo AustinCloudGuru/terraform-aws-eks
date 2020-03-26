@@ -110,6 +110,8 @@ resource "aws_security_group_rule" "https" {
   type              = "ingress"
 }
 
+
+
 #------------------------------------------------------------------------------
 # EKS Cluster
 #------------------------------------------------------------------------------
@@ -118,8 +120,12 @@ resource "aws_eks_cluster" "this" {
   role_arn = aws_iam_role.cluster.arn
 
   vpc_config {
-    security_group_ids = [aws_security_group.this.id]
-    subnet_ids         = var.subnet_ids
+    security_group_ids      = [aws_security_group.this.id]
+    subnet_ids              = var.subnet_ids
+    endpoint_private_access = var.endpoint_private_access
+    endpoint_public_access  = var.endpoint_public_access
+    public_cidr_access      = var.public_cidr_access
+
   }
   tags = merge(
     {

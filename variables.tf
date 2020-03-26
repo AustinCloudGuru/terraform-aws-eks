@@ -48,3 +48,21 @@ variable "min_size" {
   type        = number
   default     = 1
 }
+
+variable "endpoint_public_access" {
+  description = " Indicates whether or not the Amazon EKS public API server endpoint is enabled."
+  type        = bool
+  default     = true
+}
+
+variable "endpoint_private_access" {
+  description = "Indicates whether or not the Amazon EKS private API server endpoint is enabled"
+  type        = bool
+  default     = false
+}
+
+variable "public_cidr_access" {
+  description = "List of CIDR blocks that can access the Amazon EKS public API server endpoint when enabled"
+  type        = list(string)
+  default     = []
+}
