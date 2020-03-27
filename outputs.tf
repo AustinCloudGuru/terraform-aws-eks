@@ -56,7 +56,7 @@ output "eks_node_id" {
   value       = element(concat(aws_eks_node_group.this.*.id, [""]), 0)
 }
 
-output "eks_arn_arn" {
+output "eks_node_role_arn" {
   description = "The Amazon Resource Name (ARN) of the cluster"
-  value       = element(concat(aws_eks_node_group.this.*.arn, [""]), 0)
+  value       = element(concat(aws_eks_node_group.this.*.node_role_arn, [""]), 0)
 }

@@ -39,11 +39,11 @@ Terraform module which creates
 |------|-------------|
 | cluster\_role\_arn | The Amazon Resource Name (ARN) specifying the role |
 | cluster\_role\_name | The name of the role |
-| eks\_arn\_arn | The Amazon Resource Name (ARN) of the cluster |
 | eks\_cluster\_arn | The Amazon Resource Name (ARN) of the cluster |
 | eks\_cluster\_endpoint | The endpoint for your Kubernetes API server |
 | eks\_cluster\_id | The name of the cluster |
 | eks\_node\_id | EKS Cluster name and EKS Node Group name separated by a colon (:) |
+| eks\_node\_role\_arn | The Amazon Resource Name (ARN) of the cluster |
 | node\_role\_arn | The Amazon Resource Name (ARN) specifying the role |
 | node\_role\_name | The name of the role |
 | security\_group\_arn | The ARN of the security group |
