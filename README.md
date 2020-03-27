@@ -20,6 +20,7 @@ Terraform module which creates
 | endpoint\_private\_access | Indicates whether or not the Amazon EKS private API server endpoint is enabled | `bool` | `false` | no |
 | endpoint\_public\_access | Indicates whether or not the Amazon EKS public API server endpoint is enabled. | `bool` | `true` | no |
 | instance\_types | Set of instance types associated with the EKS Node Group | `list(string)` | <pre>[<br>  "t3.medium"<br>]</pre> | no |
+| k8s\_version | Kubernetes version | `string` | `""` | no |
 | labels | Key-value mapping of Kubernetes labels | `map(string)` | `{}` | no |
 | max\_size | Maximum number of worker nodes | `number` | `1` | no |
 | min\_size | minimum number of worker nodes | `number` | `1` | no |
@@ -30,7 +31,6 @@ Terraform module which creates
 | retention\_in\_days | Specifies the number of days you want to retain log events in the specified log group | `number` | `30` | no |
 | subnet\_ids | List of subnet IDs. | `list(string)` | `[]` | no |
 | tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
-| version | Kubernetes version | `string` | `""` | no |
 | vpc\_id | The VPC ID | `string` | `""` | no |
 
 ## Outputs

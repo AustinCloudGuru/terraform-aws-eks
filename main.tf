@@ -167,7 +167,7 @@ resource "aws_eks_node_group" "this" {
   instance_types  = var.instance_types
   labels          = var.labels
   release_version = var.release_version
-  version         = var.version
+  version         = var.k8s_version
 
   dynamic "remote_access" {
     for_each = var.remote_access

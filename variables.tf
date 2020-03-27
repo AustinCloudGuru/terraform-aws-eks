@@ -109,7 +109,7 @@ variable "release_version" {
   default     = ""
 }
 
-variable "version" {
+variable "k8s_version" {
   description = "Kubernetes version"
   type        = string
   default     = ""
