@@ -78,3 +78,48 @@ variable "retention_in_days" {
   type        = number
   default     = 30
 }
+
+variable "ami_type" {
+  description = "Type of Amazon Machine Image (AMI) associated with the EKS Node Group (AL2_x86_64, AL2_x86_64_GPU)"
+  type        = string
+  default     = "AL2_x86_64"
+}
+
+variable "disk_size" {
+  description = "Disk size in GiB for worker nodes"
+  type        = number
+  default     = 20
+}
+
+variable "instance_types" {
+  description = "Set of instance types associated with the EKS Node Group"
+  type        = list(string)
+  default     = ["t3.medium"]
+}
+
+variable "labels" {
+  description = "Key-value mapping of Kubernetes labels"
+  type        = map(string)
+  default     = {}
+}
+
+variable "release_version" {
+  description = "AMI version of the EKS Node Group"
+  type        = string
+  default     = ""
+}
+
+variable "version" {
+  description = "Kubernetes version"
+  type        = string
+  default     = ""
+}
+
+variable "remote_access" {
+  description = "Configuration block with remote access settings"
+  type = list(object({
+    ec2_ssh_key               = string
+    source_security_group_ids = list(string)
+  }))
+  default = []
+}

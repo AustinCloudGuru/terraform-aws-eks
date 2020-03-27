@@ -157,11 +157,25 @@ resource "aws_cloudwatch_log_group" "this" {
 #------------------------------------------------------------------------------
 # EKS Node Group
 #------------------------------------------------------------------------------
-resource "aws_eks_node_group" "demo" {
+resource "aws_eks_node_group" "this" {
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = join("-", [var.name, "-ng"])
   node_role_arn   = aws_iam_role.node.arn
   subnet_ids      = var.subnet_ids
+  ami_type        = var.ami_type
+  disk_size       = var.disk_size
+  instance_types  = var.instance_types
+  labels          = var.labels
+  release_version = var.release_version
+  version         = var.version
+
+  dynamic "remote_access" {
+    for_each = var.remote_access
+    content {
+      ec2_ssh_key               = lookup(remote_access.value, "ec2_ssh_key", null)
+      source_security_group_ids = lookup(remote_access.value, "source_security_group_ids", null)
+    }
+  }
 
   scaling_config {
     desired_size = var.desired_size
